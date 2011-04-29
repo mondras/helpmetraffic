@@ -1,0 +1,3 @@
+28.04.2011 10.14
+	El puerto fue cambiado al 80, en lugar del 3000.
+	Podría ser necesario lanzar servidor con comando "sudo node app.js"

@@ -1,2 +1,27 @@
 h1= title
+
+
+script(type='text/javascript')
+
+	navigator.geolocation.getCurrentPosition(handle_position, handle_error);
+
+	function handle_error(error){
+		alert("Error retreiving position");
+	}
+
+	function handle_position(position){
+		lat = position.coords.latitude;
+		long = position.coords.logitude;
+		var container = document.getElementById('container');
+		var paragraph = document.createElement('p');
+		paragraph.innerHTML = "Your position is lat:"+position.coords.latitude+", long:"+position.coords.longitude;
+		container.appendChild(paragraph);
+	}
+
+	
+
+
 p Welcome to #{title}
+
+#container
+
