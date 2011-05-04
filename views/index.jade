@@ -11,17 +11,39 @@ script(type='text/javascript')
 
 	function handle_position(position){
 		lat = position.coords.latitude;
-		long = position.coords.logitude;
+		long = position.coords.longitude;
 		var container = document.getElementById('container');
 		var paragraph = document.createElement('p');
-		paragraph.innerHTML = "Your position is lat:"+position.coords.latitude+", long:"+position.coords.longitude;
+		paragraph.innerHTML = "Your position is lat:"+lat+", long:"+long;
 		container.appendChild(paragraph);
+		draw_map(lat, long);
 	}
 
-	
+	function draw_map(lat, long){
+		var google_pos = new google.maps.LatLng(lat, long);
+		var map_args = {
+			zoom: 17,
+			center: google_pos,
+			mapTypeControl: false,
+			navigationControlOptions: {style:google.maps.NavigationControlStyle.SMALL},
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+		var map_container = document.getElementById('map_container');
+		map_container.style.height = '500px';
+		map_container.style.width = '500px';
+		var google_map = new google.maps.Map(map_container, map_args);
+		var pin_icon = new google.maps.MarkerImage('/img/fast.png');
+		var pin = new google.maps.Marker({
+			position: google_pos,
+			map: google_map,
+			icon: pin_icon
+		});
+	}
 
 
 p Welcome to #{title}
 
 #container
 
+#map_container
