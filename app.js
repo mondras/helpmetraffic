@@ -35,6 +35,27 @@ app.get('/', function(req, res){
 );
 });
 
+app.post('/register', function(req, res){
+  
+  
+  //Generate unique key  
+  var cradle = require('cradle');
+  var db = new(cradle.Connection)().database('helpmetraffic');
+  console.log(req.body);
+  mensaje = '{}';
+  db.save('llave', {
+      force: 'light',
+      name: 'Luke Skywalker'
+  }, function (err, res) {
+      if (err) {
+        mensaje = '{response:"ERROR"}';
+      } else {
+        mensaje = '{response:"OK"}';      
+      }
+  });  	  
+  res.send(mensaje);  
+});
+
 // Only listen on $ node app.js
 
 if (!module.parent) {

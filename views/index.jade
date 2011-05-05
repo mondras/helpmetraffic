@@ -1,49 +1,69 @@
 h1= title
 
-
+script(type='text/javascript',src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js')
 script(type='text/javascript')
 
-	navigator.geolocation.getCurrentPosition(handle_position, handle_error);
+  navigator.geolocation.getCurrentPosition(handle_position, handle_error);
 
-	function handle_error(error){
-		alert("Error retreiving position");
-	}
+  function handle_error(error){
+    alert("Error retreiving position");
+  }
 
-	function handle_position(position){
-		lat = position.coords.latitude;
-		long = position.coords.longitude;
-		var container = document.getElementById('container');
-		var paragraph = document.createElement('p');
-		paragraph.innerHTML = "Your position is lat:"+lat+", long:"+long;
-		container.appendChild(paragraph);
-		draw_map(lat, long);
-	}
+  function handle_position(position){
+    lat = position.coords.latitude;
+    long = position.coords.longitude;
+    var container = document.getElementById('container');
+    var paragraph = document.createElement('p');
+    paragraph.innerHTML = "Your position is lat:"+lat+", long:"+long;
+    container.appendChild(paragraph);
+    draw_map(lat, long);
+  }
 
-	function draw_map(lat, long){
-		var google_pos = new google.maps.LatLng(lat, long);
-		var map_args = {
-			zoom: 17,
-			center: google_pos,
-			mapTypeControl: false,
-			navigationControlOptions: {style:google.maps.NavigationControlStyle.SMALL},
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
+  function draw_map(lat, long){
+    var google_pos = new google.maps.LatLng(lat, long);
+    var map_args = {
+      zoom: 17,
+      center: google_pos,
+      mapTypeControl: false,
+      navigationControlOptions: {style:google.maps.NavigationControlStyle.SMALL},
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-		var map_container = document.getElementById('map_container');
-		map_container.style.height = '500px';
-		map_container.style.width = '500px';
-		var google_map = new google.maps.Map(map_container, map_args);
-		var pin_icon = new google.maps.MarkerImage('/img/fast.png');
-		var pin = new google.maps.Marker({
-			position: google_pos,
-			map: google_map,
-			icon: pin_icon
-		});
-	}
+    var map_container = document.getElementById('map_container');
+    map_container.style.height = '500px';
+    map_container.style.width = '500px';
+    var google_map = new google.maps.Map(map_container, map_args);
+    var pin_icon = new google.maps.MarkerImage('/img/fast.png');
+    var pin = new google.maps.Marker({
+      position: google_pos,
+      map: google_map,
+      icon: pin_icon
+    });
+  }
 
+  // TODO:
+  // Hay que crear una función que cheque si ya existe el localstorage (o cookie)
+  // de helpmetraffic, en caso de haberlo se comienzan a mandar updates
+  // en caso de que no, se debe de registrar el dispositivo y almacenar el ID que 
+  // regresa el server en el localstorage o cookie 
+  
+  function check(){
+  
+  }
+  
+  function update() {
+  
+  }
+  
+  function register() {
+    $.post('/register', {device:'PC',sex:'M',yob:'1980'});
+  }
 
 p Welcome to #{title}
 
 #container
-
 #map_container
+
+input(type='button',onClick='javascript:register()',value='Register')
+input(type='button',onClick='javascript:check()',value='Check')
+input(type='button',onClick='javascript:update()',value='Update')

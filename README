@@ -1,3 +1,7 @@
 28.04.2011 10.14
 	El puerto fue cambiado al 80, en lugar del 3000.
 	Podría ser necesario lanzar servidor con comando "sudo node app.js"
+04.05.2011 18.00
+  Se va a usar cradle para conectar el servidor web con couchdb para instalarlo:
+  $ npm install cradle
+  
