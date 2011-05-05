@@ -35,13 +35,9 @@ app.get('/', function(req, res){
 );
 });
 
-app.post('/register', function(req, res){
-    
-  //Generate unique key  
+app.post('/register', function(req, res){    
   var cradle = require('cradle');
   var db = new(cradle.Connection)().database('helpmetraffic');
-  console.log(req.body);
-  mensaje = '{}';
   db.save({
       device: req.body.device,
       sex: req.body.sex,
@@ -53,6 +49,22 @@ app.post('/register', function(req, res){
         res.send('{id:"'+response.id+'"}');
       }
   });  	  
+});
+
+app.post('/update', function(req,res) {
+  var cradle = require('cradle');
+  var db = new(cradle.Connection)().database('helpmetraffic');
+  //find user
+  db.get(req.body.id, function (err,doc) { 
+      console.log("Retriveo:"+doc);
+    });
+    
+  //Update it
+  
+  //Agregate it?
+  
+  //Send a list of all other users
+  res.send('');
 });
 
 // Only listen on $ node app.js

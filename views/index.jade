@@ -41,12 +41,6 @@ script(type='text/javascript')
     });
   }
 
-  // TODO:
-  // Hay que crear una función que cheque si ya existe el localstorage (o cookie)
-  // de helpmetraffic, en caso de haberlo se comienzan a mandar updates
-  // en caso de que no, se debe de registrar el dispositivo y almacenar el ID que 
-  // regresa el server en el localstorage o cookie 
-
   function supports_html5_storage() {
     try {
       return 'localStorage' in window && window['localStorage'] !== null;
@@ -68,8 +62,9 @@ script(type='text/javascript')
   }
   
   function update() {
-    console.log("update");
-  }
+    $.post('/update', {id:userId,latitude:'xxx',longitude:'xxx'},     function(data) {      
+    console.log('response del update:'+data)
+    });  }
   
   function register() {
     $.post('/register', {device:'PC',sex:'M',yob:'1980'}, function(data) {      
