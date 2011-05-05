@@ -36,24 +36,23 @@ app.get('/', function(req, res){
 });
 
 app.post('/register', function(req, res){
-  
-  
+    
   //Generate unique key  
   var cradle = require('cradle');
   var db = new(cradle.Connection)().database('helpmetraffic');
   console.log(req.body);
   mensaje = '{}';
-  db.save('llave', {
-      force: 'light',
-      name: 'Luke Skywalker'
-  }, function (err, res) {
-      if (err) {
-        mensaje = '{response:"ERROR"}';
+  db.save({
+      device: req.body.device,
+      sex: req.body.sex,
+      yob: req.body.yob
+  }, function (error, response) {
+      if (error) {
+        res.send('{response:"ERROR"}');
       } else {
-        mensaje = '{response:"OK"}';      
+        res.send('{id:"'+response.id+'"}');
       }
   });  	  
-  res.send(mensaje);  
 });
 
 // Only listen on $ node app.js
