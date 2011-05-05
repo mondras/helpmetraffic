@@ -46,18 +46,40 @@ script(type='text/javascript')
   // de helpmetraffic, en caso de haberlo se comienzan a mandar updates
   // en caso de que no, se debe de registrar el dispositivo y almacenar el ID que 
   // regresa el server en el localstorage o cookie 
-  
+
+  function supports_html5_storage() {
+    try {
+      return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  var userId = undefined;
   function check(){
-  
+    if(supports_html5_storage()) {
+      userId = localStorage.getItem("helpMeTrafficId");
+      if(userId == undefined) register();
+      else update();   
+    }
+    else {
+      alert('Unsupported browser!');
+    }
   }
   
   function update() {
-  
+    console.log("update");
   }
   
   function register() {
-    $.post('/register', {device:'PC',sex:'M',yob:'1980'});
+    $.post('/register', {device:'PC',sex:'M',yob:'1980'}, function(data) {      
+      data = eval(data);
+      localStorage.setItem("helpMeTrafficId",data);
+      userId = data.id;
+    });
   }
+  
+  $(document).ready(check());
 
 p Welcome to #{title}
 
