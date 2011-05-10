@@ -1,8 +1,22 @@
 body {
-  padding: 50px;
+  padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+#site_body{
+  display:none;
+}
+
+#registry_form{
+  display:none;
+}
+
+#loading{
+  display:block;
+  border:2px solid #0000FF;
+  padding:15px;
 }
