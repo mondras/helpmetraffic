@@ -1,5 +1,6 @@
 body {
   padding: 0px;
+  width:100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -17,6 +18,9 @@ a {
 
 #loading{
   display:block;
-  border:2px solid #0000FF;
   padding:15px;
+}
+
+table {
+  width:100%;
 }

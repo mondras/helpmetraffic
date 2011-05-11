@@ -1,172 +1,34 @@
+#page(data-role='page') 
 
-script(type='text/javascript',src='https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js')
-script(type='text/javascript')
+  div(data-role='content')
+    #loading
+      center
+        img(src='/img/loading1.gif')
 
-  //navigator.geolocation.getCurrentPosition(handle_position, handle_error);
-  var first_time = 1;
-  var pins = [];
-
-  function handle_error(error){
-    alert("Error retreiving position");
-  }
-
-  function handle_position(position){
-    lat = position.coords.latitude;
-    long = position.coords.longitude;
-    var container = document.getElementById('container');
-    var paragraph = document.createElement('p');
-    paragraph.innerHTML = "Your position is lat:"+lat+", long:"+long;
-    container.appendChild(paragraph);
-    //draw_map(lat, long);
-  }
-
-  function clear_map() {
-    if (pins) {
-      for (i in pins) {
-        pins[i].setMap(null);
-      }
-    }
-  }
-
-  function draw_map(coords){
-    if (first_time == 1){
-      var my_google_pos = new google.maps.LatLng(my_latitude, my_longitude);
-    
-      var map_args = {
-        zoom: 17,
-        center: my_google_pos,
-        mapTypeControl: false,
-        navigationControlOptions: {style:google.maps.NavigationControlStyle.SMALL},
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-
-      var map_container = document.getElementById('map_container');
-      map_container.style.height = '400px';
-      map_container.style.width = '400px';
-      var google_map = new google.maps.Map(map_container, map_args);
-      var pin_icon = new google.maps.MarkerImage('/img/fast.png');
-    } else {
-      clear_map();
-    }
-
-    coords.forEach(function(position){
-
-      var google_pos = new google.maps.LatLng(position.lat, position.lng);
-      var pin = new google.maps.Marker({
-        position: google_pos,
-        map: google_map,
-        icon: pin_icon
-      });
-      pins.push(pin);
-    });
-  }
-
-  function supports_html5_storage() {
-    try {
-      return 'localStorage' in window && window['localStorage'] !== null;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  var userId = undefined;
-  var my_latitude = undefined;
-  var my_longitude = undefined;
-  function check(){
-    if(supports_html5_storage()) {
-      userId = localStorage.getItem("helpMeTrafficId");
-      if(userId == undefined) show_form();
-      else setInterval(update, 15000);   
-    }
-    else {
-      alert('Unsupported browser!');
-    }
-  }
-
-  function show_form(){
-    $('#loading').hide('slow');
-    $('#site_body').css('display', 'none');
-    $('#registry_form').css('display', 'block');
-    var select = $('#yob');
-    var opt;
-    for (var i = 1930; i <= 2011; i++){
-      $('<option value='+i+'>'+i+'</option>').appendTo('#yob');
-    }
-  }
-  
-  function update() {
-    $('#loading').hide('slow');
-    $('#registry_form').css('display', 'none');
-    $('#site_body').css('display', 'block');
-    navigator.geolocation.getCurrentPosition(function(position){
-      my_latitude = position.coords.latitude;
-      my_longitude = position.coords.longitude;
-      $.post('/update', {id:userId,latitude:my_latitude,longitude:my_longitude,time:(new Date()).getTime()},     function(data) {      
-        console.log('response del update:'+data)
-        if (eval('('+data+')').response){
-          show_form();
-        } else {
-          draw_map(eval('('+data+')'));
-        }
-      })
-    }, handle_error);
-  }
-  
-  function register() {
-    userId = undefined;
-    var sex = $('#sex').val();
-    var yob = $('#yob').val();
-    if (sex == "0" || yob == "0"){
-      alert("Both fields are required");
-      return;
-    }
-    $.ajax({
-      type:'post',
-      url:'/register',
-      data: {device:navigator.platform,sex:sex,yob:yob},
-      dataType: "html",
-      success: [ 
-        function(data){
-          data = eval(data);
-          userId = data;
-          localStorage.setItem("helpMeTrafficId",data);
-        }, 
-        setInterval(update, 15000) ]
-    });
-  }
-  
-  $(document).ready( function(){
-    $(document).bind("mobileinit", function(){});
-    check()}
-  );
-
-script(type='text/javascript', src='http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js')
- 
-
-#loading
-  span Loading
-
-#site_body
-  #container
-  #map_container
-
-  input(type='button',onClick='javascript:check()',value='Check')
-  input(type='button',onClick='javascript:update()',value='Update')
+    #site_body
+      #container
+      center
+        #map_container
 
 
-#registry_form
-  table
-    tr
-     td Sex
-     td
-       select(id="sex")
-         option(value="0") -- Select --
-         option(value="M") M
-         option(value="F") F
-    tr
-      td Year of Birth
-      td 
-        select(id="yob")
-          option(value="0") -- Select --
-  input(type='button',onClick='javascript:register()',value='Register')
-
+    #registry_form
+      table
+        tr
+          td Sex
+        tr
+          td
+            div(data-role='fieldcontain')
+              select(name="sex", id="sex")
+                option(value="0") -- Select --
+                option(value="M") M
+                option(value="F") F
+        tr
+          td YOB
+        tr
+          td
+            div(data-role='fieldcontain')
+              select(name="yob", id="yob")
+                option(value="0") -- Select --
+        tr
+          td
+            div(id='btnRegister', data-role="button") Register
