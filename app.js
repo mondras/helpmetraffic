@@ -103,7 +103,7 @@ app.post('/update', function(req,res) {
               console.log("la lista regresa "+view_res);
             //db.view('view_positions/all', function(view_err, view_res){
               // The list doesn't exists. Create it.
-              if(view_err.reason == 'missing_named_view'){
+              if(view_err && view_err.reason == 'missing_named_view'){
                 db.save('_design/view_positions', {
                   views: {
                     all: {
@@ -157,7 +157,7 @@ if (!module.parent) {
   var cradle = require('cradle');
   var db = new(cradle.Connection)().database('helpmetraffic');
   db.list('view_positions/active/all', function(view_err, view_res){
-    if(view_err.reason == 'missing_named_view'){
+    if(view_err && view_err.reason == 'missing_named_view'){
       db.save('_design/view_positions', {
         views: {
 	  all: {
