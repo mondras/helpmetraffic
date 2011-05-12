@@ -80,7 +80,7 @@ app.post('/update', function(req,res) {
                     Math.sin(dLon/2) * Math.sin(dLon/2); 
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
             var d = R * c
-            vel = d/(time2-time1);
+            vel = (d/((time2-time1)/1000))*3600;
             console.log("velocidad "+vel);
           }
         } 
