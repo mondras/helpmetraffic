@@ -114,13 +114,44 @@ app.post('/update', function(req,res) {
 
 if (!module.parent) {
   app.listen(3000);
+  
+  // create view if it doesn't exist
+  var cradle = require('cradle');
+  var db = new(cradle.Connection)().database('helpmetraffic');
+  db.list('view_positions/active/all', function(view_err, view_res){
+    if(view_err.reason == 'missing_named_view'){
+      db.save('_design/view_positions', {
+        views: {
+	  all: {
+	    map: function(doc){
+	      if (doc.lat && doc.lng && doc.time && (doc.vel != undefined)){
+	        emit(doc._id, '{\"lat\": '+doc.lat+', \"lng\":'+doc.lng+', \"time\":'+doc.time+', \"vel\":'+doc.vel+'}');
+	      }
+              if (doc.lat && doc.lng && doc.time && (doc.vel == undefined)){
+		emit(doc._id, '{\"lat\": '+doc.lat+', \"lng\":'+doc.lng+', \"time\":'+doc.time+', \"vel\":-1}');
+	      }
+	    }
+	  }	
+	},
+	lists: {
+	  active: function(head, req){
+	    var jsonobj;
+	    var resp = '[';
+	    if (req.query.now){
+	      while(row = getRow()) {
+		jsonobj = eval('('+row.value+')');
+		if ((jsonobj.time +300000) > req.query.now){
+		  resp += '{\"lat\":'+jsonobj.lat+',\"lng\":'+jsonobj.lng+', \"vel\":'+jsonobj.vel+'},';
+		}
+	      }
+	      if (resp.length > 1) resp = resp.substring(0, resp.length -1);
+	    }			
+	    resp += ']';
+            send(resp);
+	  }
+	}
+      });
+    }
+  });
   console.log("Express server listening on port %d", app.address().port);
-}
-
-
-
-if (typeof(Number.prototype.toRad) === "undefined") {
-  Number.prototype.toRad = function() {
-    return this * Math.PI / 180;
-  }
 }
