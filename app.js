@@ -100,9 +100,47 @@ app.post('/update', function(req,res) {
             // send all users' info
             var now = (new Date()).getTime();
             db.list('view_positions/active/all', {now: now}, function(view_err, view_res){
-            //db.view('view_positions/all', function(view_err, view_res){
               console.log("la lista regresa "+view_res);
-              res.send(JSON.stringify(view_res));
+            //db.view('view_positions/all', function(view_err, view_res){
+              // The list doesn't exists. Create it.
+              if(view_err.reason == 'missing_named_view'){
+                db.save('_design/view_positions', {
+                  views: {
+                    all: {
+                      map: function(doc){
+                        if (doc.lat && doc.lng && doc.time && (doc.vel != undefined)){
+                          emit(doc._id, '{\"lat\": '+doc.lat+', \"lng\":'+doc.lng+', \"time\":'+doc.time+', \"vel\":'+doc.vel+'}');
+                        }
+                        if (doc.lat && doc.lng && doc.time && (doc.vel == undefined)){
+                          emit(doc._id, '{\"lat\": '+doc.lat+', \"lng\":'+doc.lng+', \"time\":'+doc.time+', \"vel\":-1}');
+                        }
+                      }
+                    }	
+                  },
+                  lists: {
+                    active: function(head, req){
+                      var jsonobj;
+                      var resp = '[';
+                      if (req.query.now){
+                        while(row = getRow()) {
+                          jsonobj = eval('('+row.value+')');
+                          if ((jsonobj.time +300000) > req.query.now){
+                            resp += '{\"lat\":'+jsonobj.lat+',\"lng\":'+jsonobj.lng+', \"vel\":'+jsonobj.vel+'},';
+                          }
+                        }
+                        if (resp.length > 1) resp = resp.substring(0, resp.length -1);
+                      }	
+                      resp += ']';
+                      send(resp);
+                    }
+                  }
+                });
+                // return empty list. next time update is called, the list will exist.
+                res.send('[]');
+              } else {
+                console.log("la lista regresa "+view_res);
+                res.send(JSON.stringify(view_res));
+              }
             });
           }
         });   
