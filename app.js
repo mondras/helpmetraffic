@@ -151,7 +151,7 @@ app.post('/update', function(req,res) {
 // Only listen on $ node app.js
 
 if (!module.parent) {
-  app.listen(3000);
+  app.listen(3001);
   
   // create view if it doesn't exist
   var cradle = require('cradle');

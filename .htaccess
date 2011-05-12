@@ -1,0 +1,23 @@
+Options +FollowSymLinks -Indexes -MultiViews
+
+
+<IfModule mod_rewrite.c>
+    
+    RewriteEngine on
+    RewriteBase /
+    # Simple URL redirect:
+    #RewriteRule ^test.html$ http://localhost:3000/test/ [P]
+    
+    # More complicated (the user sees only "benchmark.html" in their address bar)
+    #RewriteRule ^benchmark.html$ http://arguments.callee.info:8000/node?action=benchmark [P]
+    
+    # Redirect a whole subdirectory:
+    RewriteRule ^(.*)$ http://localhost:3001/$1 [P]
+    
+    
+    #RewriteEngine on
+    #RewriteCond $1 !^(index\.php|images|robots\.txt|crossdomain\.xml)
+    #RewriteRule ^(.*)$ index.php/$1 [L]
+    
+    
+</IfModule>
