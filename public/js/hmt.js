@@ -4,12 +4,16 @@
   var google_map;
   var zoom = 14;
   var center;
+  var userId = undefined;
+  var my_latitude = undefined;
+  var my_longitude = undefined;
+  var interval_update = undefined;  
 
-  function handle_error(error){
+  function handle_error(error) {
     alert("Error retreiving position");
   }
 
-  function handle_position(position){
+  function handle_position(position) {
     lat = position.coords.latitude;
     long = position.coords.longitude;
     var container = document.getElementById('container');
@@ -77,15 +81,19 @@
     }
   }
 
-  var userId = undefined;
-  var my_latitude = undefined;
-  var my_longitude = undefined;
-  var interval_update = undefined;
+
+  
   function check(){
     if(supports_html5_storage()) {
       userId = localStorage.getItem("helpMeTrafficId");
-      if(userId == undefined) show_form();
-      else interval_update = setInterval(update, 15000);   
+      if(userId == undefined) {
+        $('#site_intro').css('display', 'block');         
+      }
+      else {
+        interval_update = setInterval(update, 15000);
+        $('#loading').css('display', 'block');                  
+        $('#site_body').css('display', 'block');               
+      } 
     }
     else {
       alert('Unsupported browser!');
@@ -95,7 +103,7 @@
   function show_form(){
     var select = $('#yob');
     var opt;
-    for (var i = 2010; i >= 1930; i--){
+    for (var i = 2000; i >= 1930; i--){
       $('<option value='+i+'>'+i+'</option>').appendTo('#yob');
     }
     $('#sex').selectmenu('refresh', true);
@@ -106,6 +114,8 @@
     $('#loading').fadeOut('slow');
     $('#site_body').css('display', 'none');
     $('#registry_form').css('display', 'block');
+    $('#site_intro').css('display', 'none');
+    
   }
   
   function update() {

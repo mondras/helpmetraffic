@@ -1,23 +1,22 @@
-#intro(data-role='page') 
-  h1 Welcome to Help Me Traffic
-  h3 Want to know where the traffic jams are?
-  p
-    <a id="helpMeBtn" href="#page" data-role="button" data-inline="true" class="ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-down-c ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Help me!</span></span></a>
-
 #page(data-role='page') 
 
   div(data-role='content')
-    #loading
+    #site_intro(style="display:none;")
+      h1 Welcome to Help Me Traffic
+      h3 Want to know where the traffic jams are?
+      p
+        <a id="helpMeBtn" href="javascript:show_form();" data-role="button" data-inline="true" class="ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-down-c ui-btn-up-c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Help me!</span></span></a>  
+  
+    #loading(style="display:none;")
       center
         img(src='/img/loading1.gif')
 
-    #site_body
+    #site_body(style="display:none;")
       #container
       center
-        #map_container
+        #map_container    
 
-
-    #registry_form
+    #registry_form(style="display:none;")
       table
         tr
           td Sex
