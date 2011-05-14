@@ -62,7 +62,33 @@
     }
 
     coords.forEach(function(position){
-      var pin_icon = new google.maps.MarkerImage('/img/fast.png');
+      var vel = position.vel;
+      var pin_icon;
+      if (vel < 10) {
+        pin_icon = new google.maps.MarkerImage('/img/vslow.png');
+      } else {
+        if (vel < 30) {
+          pin_icon = new google.maps.MarkerImage('/img/slow.png');
+        } else {
+          if (vel < 40) {
+            pin_icon = new google.maps.MarkerImage('/img/savrg.png');
+          } else {
+            if (vel < 50) {
+              pin_icon = new google.maps.MarkerImage('/img/avrg.png');
+            } else {
+              if (vel < 60) {
+                pin_icon = new google.maps.MarkerImage('/img/favrg.png');
+              } else {
+                if (vel < 80) {
+                  pin_icon = new google.maps.MarkerImage('/img/fast.png');
+                } else {
+                  pin_icon = new google.maps.MarkerImage('/img/vfast.png');
+                }
+              } 
+            } 
+          } 
+        } 
+      } 
       var google_pos = new google.maps.LatLng(position.lat, position.lng);
       var pin = new google.maps.Marker({
         position: google_pos,
